@@ -1,0 +1,66 @@
+# Define namespaces
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: qualif
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prod
+---
+# Deploy api:0.3.0 in dev
+apiVersion: v1
+kind: Pod
+metadata:
+  name: api-pod-dev
+  namespace: dev
+  labels:
+    app: api
+    version: 0.3.0
+    environment: dev
+spec:
+  containers:
+    - name: api
+      image: api:0.3.0
+      ports:
+        - containerPort: 8000
+---
+# Deploy api:0.2.0 in qualif
+apiVersion: v1
+kind: Pod
+metadata:
+  name: api-pod-qualif
+  namespace: qualif
+  labels:
+    app: api
+    version: 0.2.0
+    environment: qualif
+spec:
+  containers:
+    - name: api
+      image: api:0.2.0
+      ports:
+        - containerPort: 8000
+---
+# Deploy api:0.1.0 in prod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: api-pod-prod
+  namespace: prod
+  labels:
+    app: api
+    version: 0.1.0
+    environment: prod
+spec:
+  containers:
+    - name: api
+      image: api:0.1.0
+      ports:
+        - containerPort: 8000

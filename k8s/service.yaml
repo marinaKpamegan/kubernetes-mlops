@@ -1,0 +1,31 @@
+# Specifies the API version for Services
+apiVersion: v1
+
+# Defines this as a Service resource type
+kind: Service
+
+# Metadata section for naming and labeling the service
+metadata:
+  # The name of the service, will be used for DNS within cluster
+  name: api-svc
+  # Labels attached to this service (for organization/selection)
+  labels:
+    app: api
+
+# Main service specification
+spec:
+  # Type of service (NodePort, ClusterIP, LoadBalancer, ExternalName)
+  type: NodePort
+
+  # Port configuration
+  ports:
+    # Can have multiple port mappings, this is an array
+    - port: 8000        # The port exposed internally in the cluster
+      targetPort: 8000  # The port on the container
+      nodePort: 30000   # The port exposed on each node (must be 30000-32767)
+      protocol: TCP     # Protocol for this port (TCP, UDP, or SCTP)
+
+  # Defines which pods this service will send traffic to
+  # Matches pods with label app: api
+  selector:
+    app: api  # Must match the labels in pod/deployment template
