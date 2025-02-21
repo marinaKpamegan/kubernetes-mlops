@@ -23,3 +23,52 @@ spec:
           image: api:0.1.0
           ports:
             - containerPort: 8000
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlops-client
+  labels:
+    app: frontend
+spec:
+  replicas: 2  # Number of frontend pods
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: mlops-client
+          image: mlops-client:latest  # Uses the latest mlops-client image
+          ports:
+            - containerPort: 80  # Exposes port 80 inside the container
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlops-server
+  labels:
+    app: backend
+spec:
+  replicas: 3  # Number of frontend pods
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: mlops-server
+          image: mlops-server:0.1.0  
+          ports:
+            - containerPort: 8000  
+
+---

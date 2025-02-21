@@ -29,3 +29,33 @@ spec:
   # Matches pods with label app: api
   selector:
     app: api  # Must match the labels in pod/deployment template
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  labels:
+    app: mlops-client
+spec:
+  ports:
+    - protocol: TCP
+      port: 8501      # Service exposed on port 80
+      targetPort: 8501  # Traffic directed to container's port 80
+  type: LoadBalancer  # Exposes the service externally (use NodePort if on bare-metal)
+
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  labels:
+    app: mlops-server
+spec:
+  ports:
+    - protocol: TCP
+      port: 8000      # Service exposed on port 80
+      targetPort: 8000  # Traffic directed to container's port 80
+  type: LoadBalancer  # Exposes the service externally (use NodePort if on bare-metal)
+
