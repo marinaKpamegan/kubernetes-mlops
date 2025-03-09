@@ -30,6 +30,7 @@ spec:
   selector:
     app: api  # Must match the labels in pod/deployment template
 
+---
 
 apiVersion: v1
 kind: Service

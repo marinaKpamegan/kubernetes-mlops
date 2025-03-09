@@ -99,13 +99,17 @@ spec:
 
 ---
 
-# stable deployment (90% of traffic)
+# Stable deployment (90% of traffic)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mlops-server-stable
 spec:
   replicas: 9
+  selector:
+    matchLabels:
+      app: mlops-server
+      version: stable
   template:
     metadata:
       labels:
@@ -113,16 +117,21 @@ spec:
         version: stable
     spec:
       containers:
-      - name: mlops-server
-        image: mlops-server:0.1.0
+        - name: mlops-server
+          image: mlops-server:0.1.0
+
 ---
-# canary deployment (10% of traffic)
+# Canary deployment (10% of traffic)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mlops-server-canary
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: mlops-server
+      version: canary
   template:
     metadata:
       labels:
@@ -130,5 +139,5 @@ spec:
         version: canary
     spec:
       containers:
-      - name: mlops-server
-        image: mlops-server:0.2.0
+        - name: mlops-server
+          image: mlops-server:0.2.0
