@@ -71,18 +71,6 @@ metadata:
 spec:
   selector:
     app: mlops-server
-    version: blue
-  ports:
-  - port: 8000
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: mlops-server-svc
-spec:
-  selector:
-    app: mlops-server  # matches both versions
+    version: blue # switcher en blue et green pour tester
   ports:
   - port: 8000

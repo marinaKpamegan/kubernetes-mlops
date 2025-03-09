@@ -50,7 +50,7 @@ Testez manuellement l'API du backend :
 kubectl port-forward service/mlops-api-service 8000:8000
 curl http://localhost:8000/version
 ```
-Vous devriez voir : `{"version": "0.1.0"}`
+Vous devriez voir : `{"version": "0.1.0"}` et parfois `{"version": "0.2.0"}` due au déploiement canary
 
 ---
 
