@@ -22,37 +22,27 @@ Démarrez votre cluster Kubernetes local avec Docker Desktop ou Minikube.
 ### 3️⃣ Construire les images Docker
 Ajoutez les images Docker :
 ```bash
-# Construire les images
-docker build -t mlops-server:0.1.0 ./mlops-server
-docker build -t mlops-client:latest ./mlops-client
+# Construire les images à partir du repo Mlops en trois versions (dans le endpoint /version de l'application)
+docker build -t mlops-server:0.1.0 .
+docker build -t mlops-server:0.2.0 .
+docker build -t mlops-server:0.3.0 .
+docker build -t mlops-client:latest .
 ```
 
-### 4️⃣ Déployer le backend (API ML)
+### 4️⃣ Déployer le backend (API ML) et frontend
 ```bash
-kubectl apply -f backend-deployment.yaml
+kubectl apply -f deployment.yaml
 ```
 Vérifiez les pods :
 ```bash
 kubectl get pods
 ```
 
-### 5️⃣ Déployer le frontend
-```bash
-kubectl apply -f deployment.yaml
-```
-Vérifiez les services :
+### 5️⃣ Vérifier les services
+
 ```bash
 kubectl get services
 ```
-
-### 6️⃣ Accéder à l'application
-Obtenez l'URL du frontend :
-```bash
-minikube service mlops-client-service --url
-```
-Ouvrez l'URL dans votre navigateur ! 🎉
-
----
 
 ## 🔄 Tester la Communication
 Testez manuellement l'API du backend :
