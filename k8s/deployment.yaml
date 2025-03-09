@@ -24,28 +24,28 @@ spec:
           ports:
             - containerPort: 8000
 
+---
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mlops-client
-  labels:
-    app: frontend
 spec:
-  replicas: 2  # Number of frontend pods
+  replicas: 1
   selector:
     matchLabels:
-      app: frontend
+      app: mlops-client
   template:
     metadata:
       labels:
-        app: frontend
+        app: mlops-client
     spec:
       containers:
-        - name: mlops-client
-          image: mlops-client:latest  # Uses the latest mlops-client image
-          ports:
-            - containerPort: 80  # Exposes port 80 inside the container
+      - name: mlops-client
+        image: mlops-client:latest
+        ports:
+        - containerPort: 8501
+
 
 ---
 
@@ -54,21 +54,81 @@ kind: Deployment
 metadata:
   name: mlops-server
   labels:
-    app: backend
+    app: mlops-server
 spec:
-  replicas: 3  # Number of frontend pods
+  replicas: 3
   selector:
     matchLabels:
-      app: backend
+      app: mlops-server
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   template:
     metadata:
       labels:
-        app: backend
+        app: mlops-server
     spec:
       containers:
-        - name: mlops-server
-          image: mlops-server:0.1.0  
-          ports:
-            - containerPort: 8000  
+      - name: mlops-server
+        image: mlops-server:0.2.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+
 
 ---
+
+# stable deployment (90% of traffic)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlops-server-stable
+spec:
+  replicas: 9
+  template:
+    metadata:
+      labels:
+        app: mlops-server
+        version: stable
+    spec:
+      containers:
+      - name: mlops-server
+        image: mlops-server:0.1.0
+---
+# canary deployment (10% of traffic)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlops-server-canary
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mlops-server
+        version: canary
+    spec:
+      containers:
+      - name: mlops-server
+        image: mlops-server:0.2.0

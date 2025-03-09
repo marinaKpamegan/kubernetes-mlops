@@ -1,0 +1,21 @@
+---
+# blue-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlops-server-blue
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mlops-server
+      version: blue
+  template:
+    metadata:
+      labels:
+        app: mlops-server
+        version: blue
+    spec:
+      containers:
+      - name: mlops-server
+        image: mlops-server:0.1.0

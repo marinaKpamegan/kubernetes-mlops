@@ -40,6 +40,21 @@ spec:
       ports:
         - containerPort: 8000
 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mlops-client
+  labels:
+    app: api
+    version: latest
+spec:
+  containers:
+    - name: mlops-client
+      image: mlops-client:latest
+      ports:
+        - containerPort: 8501
+
+---
 
 apiVersion: v1
 kind: Pod
@@ -47,11 +62,12 @@ metadata:
   name: mlops-server
   labels:
     app: api
-    version: 0.3.0
+    version: 0.2.0
 spec:
   containers:
     - name: mlops-server
-      image: mlops-server:0.3.0
+      image: mlops-server:0.2.0
+      imagePullPolicy: Always  # Add this line to ensure latest image is pulled
       ports:
         - containerPort: 8000
         
